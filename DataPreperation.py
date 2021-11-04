@@ -24,13 +24,20 @@ class DataPreperation(object):
             data_type (string) - name of type (exp. 'ortho', 'dsm', 'dtm', 'slope')
         '''
 
-        # load vector file
-        grid = geopandas.read_file(path_in_grid)
-
         if (data_type == 'ortho') or (data_type == 'prediction'):
             sufix = ''
         else:
             sufix = '_1m'
+
+        # establishing path
+        if path_out_dir[-1] != '/':
+            path_out_dir += '/'
+        # check if path exists if not create it
+        if not(os.path.isdir(path_out_dir + data_type + sufix)):
+            os.makedirs(path_out_dir + data_type + sufix)
+
+        # load vector file
+        grid = geopandas.read_file(path_in_grid)
 
         # variables for keeping track of the progress
         size = grid.shape[0]
@@ -84,6 +91,9 @@ class DataPreperation(object):
         '''
         path_dir_in = "{}{}_1m/".format(path_dir, data_type)
         path_dir_out = "{}{}/".format(path_dir, data_type)
+        # check if path exists if not create it
+        if not(os.path.isdir(path_dir_out)):
+            os.makedirs(path_dir_out)
 
         file_paths = self.get_file_paths(path_dir_in)
 
@@ -110,8 +120,8 @@ class DataPreperation(object):
                 os.system(bash_command)
 
         print("finished aligning")
-        
-        
+
+
     def align_tiles_ortho(self, path_dir, data_type):
         '''
         converts the resolution of an tif image into the desired resolution
