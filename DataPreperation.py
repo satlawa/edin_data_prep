@@ -46,9 +46,10 @@ class DataPreperation(object):
         # loop over all the polygons
         for i in range(size):
             # keep track of the progress
-            if i % (size // 10) == 0:
-                print('{}%'.format(percentage))
-                percentage += 10
+            if (size > 100):
+                if (i % (size // 10) == 0):
+                    print('{}%'.format(percentage))
+                    percentage += 10
             # get extend
             extend = grid.loc[i,'geometry'].bounds
             # set paths
